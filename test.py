@@ -257,6 +257,7 @@ def openAdPlayWindow():
                         height =  2,
                         width = 21)
     SearchLabel.pack(side = RIGHT)
+    
     addDeleteFrame = Frame(adPlayWindow, highlightbackground= mainColor, highlightthickness= 5, bg = mainColor, bd = 0)
     addDeleteFrame.place(relx = 0, rely = 0.65)
     addButton = Button(addDeleteFrame, 
@@ -267,7 +268,7 @@ def openAdPlayWindow():
                        height=2,
                        width= 42,
                        command= addPlaylist)
-    #addButton.pack(side= LEFT)
+    
     deleteButton = Button(addDeleteFrame,
                           text= "Delete Playlist",
                           font = 'Arial 15',
@@ -276,17 +277,60 @@ def openAdPlayWindow():
                           height= 2,
                           width= 42,
                           command = deletePlaylist)
-    #deleteButton.pack(side = RIGHT)
-    
-    
-    
 
     
+## EDIT PLAYLIST POP UP WINDOW
 def openEditPlayWindow():
     editPlayWindow = Toplevel(root)
     editPlayWindow.configure(bg = mainColor)
     editPlayWindow.title("Edit Playlists")
-    editPlayWindow.geometry("500x200")
+    editPlayWindow.geometry("500x350")
+    # List to have all playlists
+    playlistDisplayFrame = Frame(editPlayWindow, highlightbackground= mainColor, highlightthickness= 5, bg = mainColor, bd = 0)
+    playlistDisplayFrame.place(relx = 0, rely = 0)
+    playlistDisplay = Listbox(playlistDisplayFrame,
+                          font = "Arial 15",
+                          fg = acctColor,
+                          bg = bkgndColor,
+                          highlightcolor = mainColor,
+                          width= 21,
+                          height= 10)
+    playlistDisplay.pack(side = LEFT, anchor= 'nw', padx=10)
+    
+    # List to have all songs
+    songDisplay = Listbox(playlistDisplayFrame,
+                          font = "Arial 15",
+                          fg = acctColor,
+                          bg = bkgndColor,
+                          highlightcolor = mainColor,
+                          width= 21,
+                          height= 10)
+    songDisplay.pack(side = RIGHT, anchor = 'ne')
+    
+    songDisplayFrame = Frame(editPlayWindow, highlightbackground= mainColor, highlightthickness= 5, bg = mainColor, bd = 0)
+    songDisplayFrame.place(relx= .15, rely = 0.75)
+    
+    # Want to be able to select a playlist, then select multiple songs to add.
+    selectCurrentPlaylistButton = Button(songDisplayFrame,
+                                         text = "Select Playlist",
+                                         font = 'Arial 15',
+                                         fg = acctColor,
+                                         bg = bkgndColor,
+                                         highlightcolor= mainColor,
+                                         width = 15,
+                                         height = 2)
+    selectCurrentPlaylistButton.pack(side = LEFT)
+    #selectCurrentPlaylistButton.pack(side = BOTTOM, anchor= 'sw', padx= 10, pady = 10)
+    selectSongButton = Button(songDisplayFrame, 
+                              text = "Select Song(s)",
+                              font = 'Arial 15',
+                              fg = acctColor,
+                              bg = bkgndColor,
+                              highlightcolor= mainColor,
+                              width = 15, 
+                              height = 2)
+    selectSongButton.pack(side = RIGHT)
+    
     
 ### Add / Delete Playlist ###
 adPlayButtonBorder = Frame(playlistPage, highlightbackground = mainColor, highlightthickness = 5, bd = 0)
