@@ -146,8 +146,6 @@ msButton.pack()
 
 ##### Playlist Window #####
 
-        
-
 ### Creating Pop Up Windows ###
 def openAdPlayWindow():
     adPlayWindow = Toplevel(root)
@@ -285,6 +283,15 @@ def openEditPlayWindow():
     editPlayWindow.configure(bg = mainColor)
     editPlayWindow.title("Edit Playlists")
     editPlayWindow.geometry("500x350")
+    
+    db = connect_to_database()
+    cursor = db.cursor()
+        
+    query1 = f"SELECT playlistTitle FROM Playlists"
+    cursor.execute(query1)
+    result1 = cursor.fetchall()
+    print(result1)
+    
     # List to have all playlists
     playlistDisplayFrame = Frame(editPlayWindow, highlightbackground= mainColor, highlightthickness= 5, bg = mainColor, bd = 0)
     playlistDisplayFrame.place(relx = 0, rely = 0)
@@ -295,6 +302,9 @@ def openEditPlayWindow():
                           highlightcolor = mainColor,
                           width= 21,
                           height= 10)
+    for playlists in result1:
+        playlistName = playlists[0]
+        playlistDisplay.insert(END, f"{playlistName}")
     playlistDisplay.pack(side = LEFT, anchor= 'nw', padx=10)
     
     # List to have all songs
@@ -308,7 +318,7 @@ def openEditPlayWindow():
     songDisplay.pack(side = RIGHT, anchor = 'ne')
     
     songDisplayFrame = Frame(editPlayWindow, highlightbackground= mainColor, highlightthickness= 5, bg = mainColor, bd = 0)
-    songDisplayFrame.place(relx= .15, rely = 0.75)
+    songDisplayFrame.place(relx= 0.05, rely = 0.75)
     
     # Want to be able to select a playlist, then select multiple songs to add.
     selectCurrentPlaylistButton = Button(songDisplayFrame,
@@ -317,9 +327,11 @@ def openEditPlayWindow():
                                          fg = acctColor,
                                          bg = bkgndColor,
                                          highlightcolor= mainColor,
-                                         width = 15,
+                                         width = 12,
                                          height = 2)
     selectCurrentPlaylistButton.pack(side = LEFT)
+    
+    
     #selectCurrentPlaylistButton.pack(side = BOTTOM, anchor= 'sw', padx= 10, pady = 10)
     selectSongButton = Button(songDisplayFrame, 
                               text = "Select Song(s)",
@@ -327,9 +339,27 @@ def openEditPlayWindow():
                               fg = acctColor,
                               bg = bkgndColor,
                               highlightcolor= mainColor,
-                              width = 15, 
+                              width = 12, 
                               height = 2)
     selectSongButton.pack(side = RIGHT)
+    loadItemsButton = Button(songDisplayFrame, 
+                              text = "Load Items",
+                              font = 'Arial 15',
+                              fg = acctColor,
+                              bg = bkgndColor,
+                              highlightcolor= mainColor,
+                              width = 12, 
+                              height = 2)
+    loadItemsButton.pack(side = LEFT)
+    
+    
+    # Need to make into a function - load button?
+    
+    # Function to add in all songs
+    
+    
+    
+    
     
     
 ### Add / Delete Playlist ###
