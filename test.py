@@ -67,6 +67,9 @@ playlistPage.configure(bg=bkgndColor)
 searchTextPlay = StringVar()
 searchTextSong = StringVar()
 enterPlaylistName = StringVar()
+global playlistHolder
+
+
 
 ##### Setting Labels for each frame #####
 ## Start Page ##
@@ -109,6 +112,7 @@ msButtonBorder = Frame(startPage, highlightbackground = mainColor, highlightthic
 startButtonBorder = Frame(root, highlightbackground = mainColor, highlightthickness = 5, bd = 0)
 # Adding Main Menu Button
 startButtonBorder.place(relx = 0, rely = 0)
+
 startButton = Button(startButtonBorder, 
                      text = "Main menu", 
                      font = "Arial 15", 
@@ -283,6 +287,8 @@ def openEditPlayWindow():
     editPlayWindow.title("Edit Playlists")
     editPlayWindow.geometry("500x350")
     
+    
+    
     db = connect_to_database()
     cursor = db.cursor()
         
@@ -299,6 +305,7 @@ def openEditPlayWindow():
     # List to have all playlists
     playlistDisplayFrame = Frame(editPlayWindow, highlightbackground= mainColor, highlightthickness= 5, bg = mainColor, bd = 0)
     playlistDisplayFrame.place(relx = 0, rely = 0)
+    ## NEEDS TO BE A RADIOBOX
     playlistDisplay = Listbox(playlistDisplayFrame,
                           font = "Arial 15",
                           fg = acctColor,
@@ -311,8 +318,11 @@ def openEditPlayWindow():
         playlistDisplay.insert(END, f"{playlistName}")
     playlistDisplay.pack(side = LEFT, anchor= 'nw', padx=10)
     
+    
     # List to have all songs
+    ## NEEDS TO BE A CHECKBOX
     songDisplay = Listbox(playlistDisplayFrame,
+                          selectmode = "multiple",
                           font = "Arial 15",
                           fg = acctColor,
                           bg = bkgndColor,
@@ -323,6 +333,38 @@ def openEditPlayWindow():
         songName = songs[0]
         songDisplay.insert(END, f"{songName}")
     songDisplay.pack(side = RIGHT, anchor = 'ne')
+    
+    ## Select Playlist Function
+    def selectPlaylist():
+        db = connect_to_database()
+        cursor = db.cursor()
+        print("Select Playlist")
+        selected = playlistDisplay.curselection()
+        val = playlistDisplay.get(selected)
+        query1 = f"SELECT playlistID FROM Playlists WHERE playlistTitle = \"{val}\""
+        cursor.execute(query1)
+        result = cursor.fetchall()
+        cursor.close()
+        for playlist in result:
+            playlistName = playlist[0]
+        print(playlistName)
+        return playlistName     
+        
+    ## Select Song Function
+    def selectSong():
+        print("Select Songs")
+        selected = songDisplay.curselection()
+        selectedItems = []
+        for index in selected:
+            selectedItems.append(songDisplay.get(index))
+        print(selectedItems)
+        return selectedItems
+        
+        
+    ## Confirm Choices Function
+    def confirmSong(playlistHolder, selectedItems):
+        print("Confirm Song")
+        
     
     songDisplayFrame = Frame(editPlayWindow, highlightbackground= mainColor, highlightthickness= 5, bg = mainColor, bd = 0)
     songDisplayFrame.place(relx= 0.05, rely = 0.75)
@@ -335,9 +377,9 @@ def openEditPlayWindow():
                                          bg = bkgndColor,
                                          highlightcolor= mainColor,
                                          width = 12,
-                                         height = 2)
+                                         height = 2,
+                                         command = selectPlaylist)
     selectCurrentPlaylistButton.pack(side = LEFT)
-    
     
     #selectCurrentPlaylistButton.pack(side = BOTTOM, anchor= 'sw', padx= 10, pady = 10)
     selectSongButton = Button(songDisplayFrame, 
@@ -347,7 +389,8 @@ def openEditPlayWindow():
                               bg = bkgndColor,
                               highlightcolor= mainColor,
                               width = 12, 
-                              height = 2)
+                              height = 2,
+                              command = selectSong)
     selectSongButton.pack(side = RIGHT)
     confirmButton = Button(songDisplayFrame, 
                               text = "Confirm Selection",
@@ -356,18 +399,9 @@ def openEditPlayWindow():
                               bg = bkgndColor,
                               highlightcolor= mainColor,
                               width = 14, 
-                              height = 2)
-    confirmButton.pack(side = LEFT)
-    
-    
-    # Need to make into a function - load button?
-    
-    # Function to add in all songs
-    
-    
-    
-    
-    
+                              height = 2,
+                              command = confirmSong)
+    confirmButton.pack(side = LEFT)  
     
 ### Add / Delete Playlist ###
 adPlayButtonBorder = Frame(playlistPage, highlightbackground = mainColor, highlightthickness = 5, bd = 0)
@@ -420,8 +454,6 @@ songListBox = Listbox(songLBBorder,
                       width=40,
                       height=10)
 
-
-
 ### Find playlist search results ###
 def playlistLookupDB():
     db = connect_to_database()
@@ -452,7 +484,6 @@ def getPlaylistSelection():
         songName = songs[0]
         songListBox.insert(END, f"{songName}")
     songListBox.pack()
-        
     
 ### Find song search results in a playlist ###
 def songLookupDB():   
