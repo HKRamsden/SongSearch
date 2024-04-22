@@ -177,11 +177,44 @@ def openAdPlayWindow():
     
     # Function to add playlists, need to complete
     def addPlaylist():
-        print("Add Playlist")
+        #print("Add Playlist")
+        db = connect_to_database()
+        cursor = db.cursor()
+        query1 = f"SELECT * FROM Playlists"
+        cursor.execute(query1)
+        result1 = cursor.fetchall()
+        print(result1)
+        
+        val = enterPlaylistName.get()
+        query = f"INSERT INTO Playlists (playlistTitle) VALUES (\'{val}\')"
+        cursor.execute(query)
+        
+        cursor.execute(query1)
+        result2 = cursor.fetchall()
+        db.commit()
+        cursor.close()
+        print(result2)
     
     # Function to delete playlists, Need to complete
     def deletePlaylist():
-        print("Delete Playlist")
+        #print("Delete Playlist")
+        db = connect_to_database()
+        cursor = db.cursor()
+        
+        query1 = f"SELECT * FROM Playlists"
+        cursor.execute(query1)
+        result1 = cursor.fetchall()
+        print(result1)
+        
+        val = enterPlaylistName.get()
+        query = f"DELETE FROM Playlists WHERE playlistTitle = \"{val}\""
+        cursor.execute(query)
+        
+        cursor.execute(query1)
+        result2 = cursor.fetchall()
+        print(result2)
+        db.commit()
+        cursor.close()
     
     ### Playlist Creation Popup Window ###
     ## Creating Name Entry ##
