@@ -168,8 +168,20 @@ def openAdPlayWindow():
         #print(result)
         if result == [(0,)]:
             SearchLabel.config(text = "Available Title")
+            addButton.pack()
+            deleteButton.pack_forget()
         else:
             SearchLabel.config(text = "Taken Title")
+            deleteButton.pack()
+            addButton.pack_forget()
+    
+    # Function to add playlists, need to complete
+    def addPlaylist():
+        print("Add Playlist")
+    
+    # Function to delete playlists, Need to complete
+    def deletePlaylist():
+        print("Delete Playlist")
     
     ### Playlist Creation Popup Window ###
     ## Creating Name Entry ##
@@ -220,16 +232,18 @@ def openAdPlayWindow():
                        fg = acctColor,
                        bg = bkgndColor,
                        height=2,
-                       width= 21)
-    addButton.pack(side= LEFT)
+                       width= 42,
+                       command= addPlaylist)
+    #addButton.pack(side= LEFT)
     deleteButton = Button(addDeleteFrame,
                           text= "Delete Playlist",
                           font = 'Arial 15',
                           fg = acctColor,
                           bg = bkgndColor,
                           height= 2,
-                          width= 21)
-    deleteButton.pack(side = RIGHT)
+                          width= 42,
+                          command = deletePlaylist)
+    #deleteButton.pack(side = RIGHT)
     
     
     
