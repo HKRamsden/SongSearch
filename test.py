@@ -10,7 +10,7 @@ def connect_to_database():
         db = sql.connect(host = 'localhost',
                          user = 'root',
                          password = 'root',
-                         database = 'SongSearch')
+                         database = 'songSearch')
         return db
     except sql.Error as error:
         print("Error connecting to database: ", error)
@@ -46,11 +46,6 @@ root = Tk()
 bkgndColor = "#AB7CF2"
 mainColor = "#9265d6"
 acctColor = "#472c70"
-
-### Defining Variables for text input ###
-searchTextPlay = StringVar()
-searchTextSong = StringVar()
-enterPlaylistName = StringVar()
 
 # root window title and dimension #
 root.title("SongSearch - Welcome!")
@@ -151,6 +146,7 @@ def openAdPlayWindow():
     adPlayWindow = Toplevel(root)
     adPlayWindow.configure(bg = mainColor)
     adPlayWindow.title("Add / Delete Playlists")
+    adPlayWindow.geometry("500x500")
     adPlayWindow.geometry("500x200")
     
     ### Playlist Creation Popup Window ###
@@ -213,20 +209,17 @@ def openAdPlayWindow():
     deleteButton.pack(side = RIGHT)
     
     
-
-    
-    
 def openEditPlayWindow():
     editPlayWindow = Toplevel(root)
     editPlayWindow.configure(bg = mainColor)
     editPlayWindow.title("Edit Playlists")
-    editPlayWindow.geometry("500x500")
+    editPlayWindow.geometry("500x200")
     
-### Add Playlist ###
-adPlayButtonBorder = Frame(playlistPage, highlightbackground = mainColor, highlightthickness = 5, bg = mainColor, bd = 0, highlightcolor= mainColor)
+### Add / Delete Playlist ###
+adPlayButtonBorder = Frame(playlistPage, highlightbackground = mainColor, highlightthickness = 5, bd = 0)
 adPlayButtonBorder.place(relx = 0.2, rely = 0)
 adPlayButton = Button(adPlayButtonBorder,
-                      text = "Add Playlist",
+                      text = "Add/Delete Playlist",
                       font = "Arial 15",
                       fg = acctColor,
                       bg = bkgndColor,
@@ -236,7 +229,7 @@ adPlayButton = Button(adPlayButtonBorder,
 adPlayButton.pack()
 
 ### Edit Playlist ###
-editPlayButtonBorder = Frame(playlistPage, highlightbackground= mainColor, highlightcolor= mainColor, bg = mainColor, highlightthickness= 5, bd= 0)
+editPlayButtonBorder = Frame(playlistPage, highlightbackground = mainColor, highlightthickness = 5, bd = 0 )
 editPlayButtonBorder.place(relx = 0.4, rely = 0)
 editPlayButton = Button(editPlayButtonBorder,
                         text = "Edit Playlist",
@@ -273,7 +266,10 @@ songListBox = Listbox(songLBBorder,
                       width=40,
                       height=10)
 
-
+### Defining Variables for text input ###
+searchTextPlay = StringVar()
+searchTextSong = StringVar()
+enterPlaylistName = StringVar()
 
 ### Find playlist search results ###
 def playlistLookupDB():
@@ -284,6 +280,7 @@ def playlistLookupDB():
     cursor.execute(query1)
     result = cursor.fetchall()
     cursor.close()
+    playlistListBox.delete(0, END)
     for names in result:
         playlistName = names[0]
         playlistListBox.insert(END, f"{playlistName}")
@@ -299,6 +296,7 @@ def getPlaylistSelection():
     cursor.execute(query1)
     result = cursor.fetchall()
     cursor.close()
+    songListBox.delete(0, END)
     for songs in result:
         songName = songs[0]
         songListBox.insert(END, f"{songName}")
@@ -314,6 +312,7 @@ def songLookupDB():
     cursor.execute(query)
     result = cursor.fetchall()
     cursor.close()
+    songListBox.delete(0, END)
     for songs in result:
         songName = songs[0]
         songListBox.insert(END, f"{songName}")
