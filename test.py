@@ -64,6 +64,11 @@ startPage.configure(bg=bkgndColor)
 songPage.configure(bg=bkgndColor)
 playlistPage.configure(bg=bkgndColor)
 
+### Defining Variables for text input ###
+searchTextPlay = StringVar()
+searchTextSong = StringVar()
+enterPlaylistName = StringVar()
+
 ##### Setting Labels for each frame #####
 ## Start Page ##
 startLabel = Label(startPage, text = "Welcome to SongSearch!", font="Arial 20 bold", bg=bkgndColor, fg=acctColor)
@@ -141,6 +146,8 @@ msButton.pack()
 
 ##### Playlist Window #####
 
+        
+
 ### Creating Pop Up Windows ###
 def openAdPlayWindow():
     adPlayWindow = Toplevel(root)
@@ -148,6 +155,21 @@ def openAdPlayWindow():
     adPlayWindow.title("Add / Delete Playlists")
     adPlayWindow.geometry("500x500")
     adPlayWindow.geometry("500x200")
+    
+    ## Function to find Existing Playlists
+    def playlistExists():
+        db = connect_to_database()
+        cursor = db.cursor()
+        val = enterPlaylistName.get()
+        query1 = f"SELECT EXISTS (SELECT playlistTitle FROM playlists WHERE playlistTitle = \"{val}\")"
+        cursor.execute(query1)
+        result = cursor.fetchall()
+        cursor.close()
+        #print(result)
+        if result == [(0,)]:
+            SearchLabel.config(text = "Available Title")
+        else:
+            SearchLabel.config(text = "Taken Title")
     
     ### Playlist Creation Popup Window ###
     ## Creating Name Entry ##
@@ -179,7 +201,8 @@ def openAdPlayWindow():
                           fg = acctColor,
                           bg = bkgndColor,
                           height = 2,
-                          width = 21)
+                          width = 21, 
+                          command= playlistExists)
     SearchButton.pack(side = LEFT)
     SearchLabel = Label(SearchButtonFrame, 
                         text = 'Results Will Appear Soon',
@@ -208,6 +231,9 @@ def openAdPlayWindow():
                           width= 21)
     deleteButton.pack(side = RIGHT)
     
+    
+    
+
     
 def openEditPlayWindow():
     editPlayWindow = Toplevel(root)
@@ -266,10 +292,7 @@ songListBox = Listbox(songLBBorder,
                       width=40,
                       height=10)
 
-### Defining Variables for text input ###
-searchTextPlay = StringVar()
-searchTextSong = StringVar()
-enterPlaylistName = StringVar()
+
 
 ### Find playlist search results ###
 def playlistLookupDB():
@@ -290,7 +313,7 @@ def getPlaylistSelection():
     db = connect_to_database()
     cursor = db.cursor()
     selected = playlistListBox.curselection()
-    print(playlistListBox.get(selected))
+    #print(playlistListBox.get(selected))
     val = playlistListBox.get(selected)
     query1 = f"SELECT songTitle FROM Playlists NATURAL JOIN PlaylistSongs NATURAL JOIN Songs WHERE playlistTitle = \"{val}\""
     cursor.execute(query1)
@@ -422,3 +445,6 @@ root.mainloop()
 
 #11 C# Corner - How to get items from a database into a Tkinter Listbox?
 # https://www.c-sharpcorner.com/article/how-to-get-items-from-a-database-into-a-tkinter-listbox/
+
+#12 Tutorials Point - Best Way to Test if a Row Exists in a MySQL Table
+# https://www.tutorialspoint.com/best-way-to-test-if-a-row-exists-in-a-mysql-table#:~:text=To%20test%20whether%20a%20row,false%20is%20represented%20as%200.
