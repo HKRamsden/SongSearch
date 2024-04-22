@@ -1,6 +1,5 @@
 ###### Imports #####
 from tkinter import * 
-from tkinter import filedialog
 import mariadb as sql
 
 
@@ -290,7 +289,12 @@ def openEditPlayWindow():
     query1 = f"SELECT playlistTitle FROM Playlists"
     cursor.execute(query1)
     result1 = cursor.fetchall()
-    print(result1)
+    #print(result1)
+    
+    query2 = f"SELECT songTitle FROM Songs"
+    cursor.execute(query2)
+    result2 = cursor.fetchall()
+    #print(result2)
     
     # List to have all playlists
     playlistDisplayFrame = Frame(editPlayWindow, highlightbackground= mainColor, highlightthickness= 5, bg = mainColor, bd = 0)
@@ -315,6 +319,9 @@ def openEditPlayWindow():
                           highlightcolor = mainColor,
                           width= 21,
                           height= 10)
+    for songs in result2:
+        songName = songs[0]
+        songDisplay.insert(END, f"{songName}")
     songDisplay.pack(side = RIGHT, anchor = 'ne')
     
     songDisplayFrame = Frame(editPlayWindow, highlightbackground= mainColor, highlightthickness= 5, bg = mainColor, bd = 0)
@@ -342,15 +349,15 @@ def openEditPlayWindow():
                               width = 12, 
                               height = 2)
     selectSongButton.pack(side = RIGHT)
-    loadItemsButton = Button(songDisplayFrame, 
-                              text = "Load Items",
+    confirmButton = Button(songDisplayFrame, 
+                              text = "Confirm Selection",
                               font = 'Arial 15',
                               fg = acctColor,
                               bg = bkgndColor,
                               highlightcolor= mainColor,
-                              width = 12, 
+                              width = 14, 
                               height = 2)
-    loadItemsButton.pack(side = LEFT)
+    confirmButton.pack(side = LEFT)
     
     
     # Need to make into a function - load button?
