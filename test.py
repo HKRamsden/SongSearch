@@ -194,7 +194,7 @@ def openAdPlayWindow():
         cursor.close()
         print(result2)
     
-    # Function to delete playlists, Need to complete
+    # Function to delete playlists
     def deletePlaylist():
         db = connect_to_database()
         cursor = db.cursor()
@@ -274,7 +274,6 @@ def openAdPlayWindow():
                           width= 42,
                           command = deletePlaylist)
 
-    
 ## EDIT PLAYLIST POP UP WINDOW
 def openEditPlayWindow():
     editPlayWindow = Toplevel(root)
@@ -371,7 +370,6 @@ def openEditPlayWindow():
                                          command = selectAll)
     selectCurrentPlaylistButton.pack(side = LEFT)
     
-
 ### Add / Delete Playlist ###
 adPlayButtonBorder = Frame(playlistPage, highlightbackground = mainColor, highlightthickness = 5, bd = 0)
 adPlayButtonBorder.place(relx = 0.2, rely = 0)
@@ -397,7 +395,6 @@ editPlayButton = Button(editPlayButtonBorder,
                         height= 2,
                         command= openEditPlayWindow)
 editPlayButton.pack()
-
 
 ### LIST BOX ###
 ### Creating List Boxes for Playlist Page ###
@@ -522,7 +519,32 @@ searchSongEntry = Entry(searchSongBorder,
                     bg = bkgndColor)
 searchSongEntry.pack(side = RIGHT)
 
+### Song Management Page ###
+## Listbox to display artists and info
 
+## Listbox to display albums and info
+
+## Listbox to display songs and info
+
+## Button to add/delete Artist
+# Pop Up window
+# Textbox to Search
+# Delete if Exists
+# Add Info
+
+# Button to add/delete album
+# Pop Up Window
+# Textbox to Search
+# Delete if Exists
+# Search Artist
+# Add info 
+
+# Button to add delete song
+# Pop Up Window
+# Textbox to Search
+# Delete If Exists
+# Search Album
+# Add info
  
     
 
@@ -579,3 +601,6 @@ root.mainloop()
 
 #13 Medium - Python Tkinter Multi-Select Listboxes
 # https://medium.com/@rushi.hacktivity/python-tinker-multiselect-listbox-e007ecd313d4
+
+#14 Tutorials Point - How to Select at the Same Time from Two Tkinter Listboxes
+# https://www.tutorialspoint.com/how-to-select-at-the-same-time-from-two-tkinter-listbox
