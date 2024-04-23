@@ -71,6 +71,7 @@ searchArtist = StringVar()
 searchAlbum = StringVar()
 searchSong = StringVar()
 searchRelease = StringVar()
+enterLabel = StringVar()
 
 ##### Setting Labels for each frame #####
 ## Start Page ##
@@ -658,26 +659,133 @@ def openArtistEditWin():
     artistEditWindow.title("Add / Delete Artists")
     artistEditWindow.geometry("500x500")
 
+    #Check input
+    def artistExists():
+        db = connect_to_database()
+        cursor = db.cursor()
+        val = searchArtist.get()
+        val2 = enterLabel.get()
+        query1 = f"SELECT EXISTS(SELECT artistTitle FROM Artists WHERE artistTitle = \"{val}\")"
+        cursor.execute(query1)
+        result = cursor.fetchall()
+        print(result)
+        cursor.close()
+        if result == [(0,)]:
+            print("test")
+            artistLabel.config(text = "Available")
+            deleteButton.grid_forget()
+            addButton.grid(row = 3, column = 0)
+            labelEntry.grid(row = 1, column = 1)
+            labelButton.grid(row = 1, column = 0)
+        
+        else:
+            print("alt Test")
+            artistLabel.config(text = "Exists")
+            addButton.grid_forget()
+            labelEntry.grid_forget()
+            labelButton.grid_forget()
+            
+
+    # Delete if Exists
+    def deleteArtist():
+        db = connect_to_database()
+        cursor = db.cursor()
+        val = searchArtist.get()
+        query = f"DELETE FROM Artists WHERE artistTitle = \"{val}\""
+        cursor.execute(query)
+        result = cursor.fetchall()
+        db.commit()
+        cursor.close()
+        print(result)
+    
+    # Add Info
+    def addArtist():
+        db = connect_to_database()
+        cursor = db.cursor()
+        val = searchArtist.get()
+        val2 = enterLabel.get()
+        query = f"INSERT INTO Artists (artistTitle, label) VALUES (\'{val}\', \'{val2}\')"
+        cursor.execute(query)
+        result = cursor.fetchall()
+        db.commit()
+        cursor.close()
+        print(result)
+    
     # Textbox and button to Search
     searchArtistBorder = Frame(artistEditWindow, highlightbackground = mainColor, highlightcolor=mainColor, bg = mainColor, highlightthickness = 5, bd = 0)
     searchArtistBorder.place(relx = 0, rely = 0)
     searchArtistButton = Button(searchArtistBorder, 
-                     text = "Search Albums:",
+                     text = "Search Artist",
                      font = "Arial 15",
                      fg = acctColor,
                      bg = bkgndColor,
                      width= 15,
-                     height = 2)
-    searchArtistButton.pack(side = LEFT)
+                     height = 2,
+                     command = artistExists)
+    searchArtistButton.grid(row = 0, column = 0)
 
     searchArtistEntry = Entry(searchArtistBorder,
                     textvariable= searchArtist,
                     font = "Arial 20",
                     fg = acctColor,
                     bg = bkgndColor)
-    searchArtistEntry.pack(side = RIGHT)
-    # Delete if Exists
-    # Add Info
+    searchArtistEntry.grid(row = 0, column = 1)
+    
+    # Result Label 
+    artistLabel = Label(searchArtistBorder,
+                        text = "Results Here",
+                        font = 'Arial 15', 
+                        fg = acctColor,
+                        bg = bkgndColor,
+                        height = 2, 
+                        width = 15)
+    artistLabel.grid(row = 2, column = 1)
+    
+    resultLabel = Label(searchArtistBorder,
+                        text = "Artist Information:",
+                        font = 'Arial 15',
+                        fg = acctColor,
+                        bg = bkgndColor,
+                        height = 2,
+                        width = 15)
+    resultLabel.grid(row = 2, column = 0)
+    
+    labelEntry = Entry(searchArtistBorder,
+                       textvariable = enterLabel,
+                       font = 'Arial 20',
+                       fg = acctColor,
+                       bg = bkgndColor)
+    labelEntry.grid(row = 1, column = 1)
+    
+    labelButton = Button(searchArtistBorder, 
+                         text = "Enter Artist Label",
+                         font = 'Arial 15',
+                         fg = acctColor,
+                         bg = bkgndColor,
+                         height = 2, 
+                         width = 15)
+    labelButton.grid(row = 1, column = 0)
+    
+    addButton = Button(searchArtistBorder,
+                       text = "Add Artist",
+                       font = 'Arial 15',
+                       fg = acctColor,
+                       bg = bkgndColor,
+                       height = 2,
+                       width = 15, 
+                       command = addArtist)
+    addButton.grid(row = 3, column = 0)
+    
+    deleteButton = Button(searchArtistBorder,
+                          text = "Delete Artist",
+                          font = 'Arial 15',
+                          fg = acctColor,
+                          bg = bkgndColor,
+                          height = 2,
+                          width = 15,
+                          command = deleteArtist)
+    deleteButton.grid(row = 3, column = 1)
+    
 
 ## Button to add/delete Artist
 editArtistButton = Button(listboxDisplayFrames,
