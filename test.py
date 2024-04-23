@@ -651,9 +651,15 @@ cursor.close()
 
 ## Add/Delete Artist
 # Pop Up window
-# Textbox to Search
-# Delete if Exists
-# Add Info
+def openArtistEditWin():
+    artistEditWindow = Toplevel(root)
+    artistEditWindow.configure(bg = mainColor)
+    artistEditWindow.title("Add / Delete Artists")
+    artistEditWindow.geometry("500x500")
+
+    # Textbox to Search
+    # Delete if Exists
+    # Add Info
 
 ## Button to add/delete Artist
 editArtistButton = Button(listboxDisplayFrames,
@@ -662,16 +668,22 @@ editArtistButton = Button(listboxDisplayFrames,
                           fg = acctColor,
                           bg = bkgndColor,
                           width= 22,
-                          height= 2)
+                          height= 2,
+                          command= openArtistEditWin)
 
 editArtistButton.grid(row = 5, column= 0, sticky = 'w')
 
 ## Add/Delete Album
 # Pop Up Window
-# Textbox to Search
-# Delete if Exists
-# Search Artist
-# Add info 
+def openAlbumEditWin():
+    albumEditWindow = Toplevel(root)
+    albumEditWindow.configure(bg = mainColor)
+    albumEditWindow.title("Add / Delete Albums")
+    albumEditWindow.geometry("500x500")
+    # Textbox to Search
+    # Delete if Exists
+    # Search Artist
+    # Add info 
 
 # Button to add/delete album
 editAlbumButton = Button(listboxDisplayFrames,
@@ -680,16 +692,22 @@ editAlbumButton = Button(listboxDisplayFrames,
                           fg = acctColor,
                           bg = bkgndColor,
                           width= 22,
-                          height= 2)
+                          height= 2, 
+                          command= openAlbumEditWin)
 
 editAlbumButton.grid(row = 5, column= 0, sticky = 'e')
 
 ## Add/Delete Song
 # Pop Up Window
-# Textbox to Search
-# Delete If Exists
-# Search Album
-# Add info
+def openSongEditWin():
+    songEditWindow = Toplevel(root)
+    songEditWindow.configure(bg = mainColor)
+    songEditWindow.title("Add / Delete Songs")
+    songEditWindow.geometry("500x500")
+    # Textbox to Search
+    # Delete If Exists
+    # Search Album
+    # Add info
 
 # Button to add delete song
 editSongButton = Button(listboxDisplayFrames,
@@ -698,16 +716,22 @@ editSongButton = Button(listboxDisplayFrames,
                           fg = acctColor,
                           bg = bkgndColor,
                           width= 22,
-                          height= 2)
+                          height= 2,
+                          command= openSongEditWin)
 
 editSongButton.grid(row = 5, column= 1, sticky= 'w')
  
  ## Add/Delete Release
 # Pop Up Window
-# Textbox to Search
-# Delete If Exists
-# Search Album
-# Add info
+def openReleaseEditWin():
+    releaseEditWindow = Toplevel(root)
+    releaseEditWindow.configure(bg = mainColor)
+    releaseEditWindow.title("Add / Delete RFeleases")
+    releaseEditWindow.geometry("500x500")
+    # Textbox to Search
+    # Delete If Exists
+    # Search Album
+    # Add info
 
 # Button to add delete release   
 editReleaseButton = Button(listboxDisplayFrames,
@@ -716,7 +740,8 @@ editReleaseButton = Button(listboxDisplayFrames,
                           fg = acctColor,
                           bg = bkgndColor,
                           width= 22,
-                          height= 2)
+                          height= 2, 
+                          command = openReleaseEditWin)
 
 editReleaseButton.grid(row = 5, column= 1, sticky= 'e')
 
