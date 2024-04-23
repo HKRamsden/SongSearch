@@ -565,7 +565,7 @@ artistDisplay = Listbox(listboxDisplayFrames,
                         bg = bkgndColor,
                         highlightcolor= mainColor,
                         width = 44,
-                        height = 10)
+                        height = 7)
 for artists in artistResult:
     artistName = artists[0]
     labelName = artists[1]
@@ -590,7 +590,7 @@ albumDisplay = Listbox(listboxDisplayFrames,
                         bg = bkgndColor,
                         highlightcolor= mainColor,
                         width = 44,
-                        height = 10)
+                        height = 7)
 for albums in albumResult:
     albumName = albums[0]
     artistName = albums[1]
@@ -616,7 +616,7 @@ songDisplay = Listbox(listboxDisplayFrames,
                         bg = bkgndColor,
                         highlightcolor= mainColor,
                         width = 44,
-                        height = 10)
+                        height = 7)
 for songs in songResult:
     songName = songs[0]
     albumName = songs[1]
@@ -639,36 +639,86 @@ releaseDisplay = Listbox(listboxDisplayFrames,
                         bg = bkgndColor,
                         highlightcolor= mainColor,
                         width = 44,
-                        height = 10)
+                        height = 7)
 for versions in releaseResult:
     albumName = versions[0]
     year = versions[1]
     remastered = versions[2]
     releaseDisplay.insert(END, f"{albumName}: {year}, {remastered}")
 releaseDisplay.grid(row = 4, column = 1)
+cursor.close()
 
-## Button to add/delete Artist
+
+## Add/Delete Artist
 # Pop Up window
 # Textbox to Search
 # Delete if Exists
 # Add Info
 
-# Button to add/delete album
+## Button to add/delete Artist
+editArtistButton = Button(listboxDisplayFrames,
+                          text = "Edit Artists",
+                          font = 'Arial 15',
+                          fg = acctColor,
+                          bg = bkgndColor,
+                          width= 22,
+                          height= 2)
+
+editArtistButton.grid(row = 5, column= 0, sticky = 'w')
+
+## Add/Delete Album
 # Pop Up Window
 # Textbox to Search
 # Delete if Exists
 # Search Artist
 # Add info 
 
-# Button to add delete song
+# Button to add/delete album
+editAlbumButton = Button(listboxDisplayFrames,
+                          text = "Edit Albums",
+                          font = 'Arial 15',
+                          fg = acctColor,
+                          bg = bkgndColor,
+                          width= 22,
+                          height= 2)
+
+editAlbumButton.grid(row = 5, column= 0, sticky = 'e')
+
+## Add/Delete Song
 # Pop Up Window
 # Textbox to Search
 # Delete If Exists
 # Search Album
 # Add info
- 
-    
 
+# Button to add delete song
+editSongButton = Button(listboxDisplayFrames,
+                          text = "Edit Songs",
+                          font = 'Arial 15',
+                          fg = acctColor,
+                          bg = bkgndColor,
+                          width= 22,
+                          height= 2)
+
+editSongButton.grid(row = 5, column= 1, sticky= 'w')
+ 
+ ## Add/Delete Release
+# Pop Up Window
+# Textbox to Search
+# Delete If Exists
+# Search Album
+# Add info
+
+# Button to add delete release   
+editReleaseButton = Button(listboxDisplayFrames,
+                          text = "Edit Release",
+                          font = 'Arial 15',
+                          fg = acctColor,
+                          bg = bkgndColor,
+                          width= 22,
+                          height= 2)
+
+editReleaseButton.grid(row = 5, column= 1, sticky= 'e')
 
 
 
@@ -725,3 +775,6 @@ root.mainloop()
 
 #14 Tutorials Point - How to Select at the Same Time from Two Tkinter Listboxes
 # https://www.tutorialspoint.com/how-to-select-at-the-same-time-from-two-tkinter-listbox
+
+#15 Stack Overflow - Tkinter Configure Column Widths
+# https://stackoverflow.com/questions/14045271/tkinter-configure-columnwidth
