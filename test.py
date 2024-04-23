@@ -548,7 +548,7 @@ releaseResult = cursor.fetchall()
 
 # Frame to hold listboxes 
 listboxDisplayFrames = Frame(songPage, highlightbackground= mainColor, highlightthickness= 5, bg = mainColor, bd = 0)
-listboxDisplayFrames.place(relx = 0.005, rely = 0.07)
+listboxDisplayFrames.place(relx = 0.005, rely = 0.09)
 
 # Label for Artsts
 artistLabel = Label(listboxDisplayFrames,
@@ -574,6 +574,7 @@ for artists in artistResult:
     artistDisplay.insert(END, f"{artistName}, Label: {labelName}")
 #artistDisplay.pack(side = BOTTOM, anchor = 'sw')
 artistDisplay.grid(row = 2, column=0)
+
 
 # Label for Albums
 albumLabel = Label(listboxDisplayFrames,
@@ -601,6 +602,7 @@ for albums in albumResult:
     albumDisplay.insert(END, f"{albumName}: {artistName}, {genre}, {year}")
 #albumDisplay.pack(side = BOTTOM, anchor = 'se')
 albumDisplay.grid(row = 2, column = 1)
+
 
 # Label for Songs
 songsLabel = Label(listboxDisplayFrames,
@@ -684,6 +686,7 @@ def openArtistEditWin():
             addButton.grid_forget()
             labelEntry.grid_forget()
             labelButton.grid_forget()
+            deleteButton.grid(row = 3, column = 1)
             
 
     # Delete if Exists
@@ -693,10 +696,19 @@ def openArtistEditWin():
         val = searchArtist.get()
         query = f"DELETE FROM Artists WHERE artistTitle = \"{val}\""
         cursor.execute(query)
-        result = cursor.fetchall()
+        artistDisplay.delete(0, END)
+        cursor.execute(artistQuery)
+        for artists in artistResult:
+            print("test")
+            artistName = artists[0]
+            artistLabel = artists[1]
+            artistDisplay.insert(END, f"{artistName}, Label: {artistLabel}")
+            print(artistName)
+            print(artistLabel)
+        
         db.commit()
         cursor.close()
-        print(result)
+        
     
     # Add Info
     def addArtist():
@@ -706,10 +718,11 @@ def openArtistEditWin():
         val2 = enterLabel.get()
         query = f"INSERT INTO Artists (artistTitle, label) VALUES (\'{val}\', \'{val2}\')"
         cursor.execute(query)
-        result = cursor.fetchall()
+        artistDisplay.insert(END, f"{val}, Label: {val2}")
+        #result = cursor.fetchall()
         db.commit()
         cursor.close()
-        print(result)
+        #print(result)
     
     # Textbox and button to Search
     searchArtistBorder = Frame(artistEditWindow, highlightbackground = mainColor, highlightcolor=mainColor, bg = mainColor, highlightthickness = 5, bd = 0)
@@ -883,29 +896,7 @@ editSongButton = Button(listboxDisplayFrames,
 
 editSongButton.grid(row = 5, column= 1, sticky= 'w')
  
- ## Add/Delete Release
-# Pop Up Window
-def openReleaseEditWin():
-    releaseEditWindow = Toplevel(root)
-    releaseEditWindow.configure(bg = mainColor)
-    releaseEditWindow.title("Add / Delete Releases")
-    releaseEditWindow.geometry("500x500")
-    # Textbox to Search
-    # Delete If Exists
-    # Search Album
-    # Add info
 
-# Button to add delete release   
-editReleaseButton = Button(listboxDisplayFrames,
-                          text = "Edit Release",
-                          font = 'Arial 15',
-                          fg = acctColor,
-                          bg = bkgndColor,
-                          width= 22,
-                          height= 2, 
-                          command = openReleaseEditWin)
-
-editReleaseButton.grid(row = 5, column= 1, sticky= 'e')
 
 
 
@@ -965,3 +956,6 @@ root.mainloop()
 
 #15 Stack Overflow - Tkinter Configure Column Widths
 # https://stackoverflow.com/questions/14045271/tkinter-configure-columnwidth
+
+#16 Reddit - Updating ListBox
+# https://www.reddit.com/r/learnpython/comments/3wba1s/having_trouble_getting_tkinter_listbox_to_update/
