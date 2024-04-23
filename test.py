@@ -688,7 +688,6 @@ def openArtistEditWin():
             labelButton.grid_forget()
             deleteButton.grid(row = 3, column = 1)
             
-
     # Delete if Exists
     def deleteArtist():
         db = connect_to_database()
@@ -709,7 +708,6 @@ def openArtistEditWin():
         db.commit()
         cursor.close()
         
-    
     # Add Info
     def addArtist():
         db = connect_to_database()
@@ -719,10 +717,8 @@ def openArtistEditWin():
         query = f"INSERT INTO Artists (artistTitle, label) VALUES (\'{val}\', \'{val2}\')"
         cursor.execute(query)
         artistDisplay.insert(END, f"{val}, Label: {val2}")
-        #result = cursor.fetchall()
         db.commit()
         cursor.close()
-        #print(result)
     
     # Textbox and button to Search
     searchArtistBorder = Frame(artistEditWindow, highlightbackground = mainColor, highlightcolor=mainColor, bg = mainColor, highlightthickness = 5, bd = 0)
@@ -820,27 +816,59 @@ def openAlbumEditWin():
     albumEditWindow.title("Add / Delete Albums")
     albumEditWindow.geometry("500x500")
     
+    db = connect_to_database()
+    cursor = db.cursor()
+    
     # Textbox to Search
     searchAlbumBorder = Frame(albumEditWindow, highlightbackground = mainColor, highlightcolor=mainColor, bg = mainColor, highlightthickness = 5, bd = 0)
     searchAlbumBorder.place(relx = 0, rely = 0)
     searchAlbumButton = Button(searchAlbumBorder, 
-                     text = "Search Artists:",
+                     text = "Search Albums",
                      font = "Arial 15",
                      fg = acctColor,
                      bg = bkgndColor,
                      width= 15,
                      height = 2)
-    searchAlbumButton.pack(side = LEFT)
+    searchAlbumButton.grid(row = 0, column = 0, sticky = 'w')
 
     searchAlbumEntry = Entry(searchAlbumBorder,
                     textvariable= searchAlbum,
                     font = "Arial 20",
                     fg = acctColor,
-                    bg = bkgndColor)
-    searchAlbumEntry.pack(side = RIGHT)
+                    bg = bkgndColor) 
+    searchAlbumEntry.grid(row = 0, column = 0, sticky = 'e')
+    
+    # Listbox to grab artist information 
+    artistDisplay = Listbox(searchAlbumBorder,
+                        font = 'Arial 15',
+                        fg = acctColor,
+                        bg = bkgndColor,
+                        highlightcolor= mainColor,
+                        width = 44,
+                        height = 7)
+    cursor.execute(artistQuery)
+    for artists in artistResult:
+        artistName = artists[0]
+        labelName = artists[1]
+        artistDisplay.insert(END, f"{artistName}, Label: {labelName}")
+    #artistDisplay.pack(side = BOTTOM, anchor = 'sw')
+    artistDisplay.grid(row = 1, column=0)
+    # Check input
+    
+    
     # Delete if Exists
+    
+    
     # Search Artist
+    
+    
     # Add info 
+    
+    
+    
+    
+    
+    
 
 # Button to add/delete album
 editAlbumButton = Button(listboxDisplayFrames,
@@ -854,6 +882,12 @@ editAlbumButton = Button(listboxDisplayFrames,
 
 editAlbumButton.grid(row = 5, column= 0, sticky = 'e')
 
+
+
+
+
+
+
 ## Add/Delete Song
 # Pop Up Window
 def openSongEditWin():
@@ -861,6 +895,13 @@ def openSongEditWin():
     songEditWindow.configure(bg = mainColor)
     songEditWindow.title("Add / Delete Songs")
     songEditWindow.geometry("500x500")
+    
+    
+    
+    # Delete If Exists
+    # Search Album
+    # Add info
+    
     
     # Textbox to Search
     searchSongBorder = Frame(songEditWindow, highlightbackground = mainColor, highlightcolor=mainColor, bg = mainColor, highlightthickness = 5, bd = 0)
@@ -880,9 +921,6 @@ def openSongEditWin():
                     fg = acctColor,
                     bg = bkgndColor)
     searchSongEntry.pack(side = RIGHT)
-    # Delete If Exists
-    # Search Album
-    # Add info
 
 # Button to add delete song
 editSongButton = Button(listboxDisplayFrames,
