@@ -166,7 +166,6 @@ def openAdPlayWindow():
         cursor.execute(query1)
         result = cursor.fetchall()
         cursor.close()
-        #print(result)
         if result == [(0,)]:
             SearchLabel.config(text = "Available Title")
             addButton.pack()
@@ -178,7 +177,6 @@ def openAdPlayWindow():
     
     # Function to add playlists, need to complete
     def addPlaylist():
-        #print("Add Playlist")
         db = connect_to_database()
         cursor = db.cursor()
         query1 = f"SELECT * FROM Playlists"
@@ -198,7 +196,6 @@ def openAdPlayWindow():
     
     # Function to delete playlists, Need to complete
     def deletePlaylist():
-        #print("Delete Playlist")
         db = connect_to_database()
         cursor = db.cursor()
         
@@ -234,11 +231,9 @@ def openAdPlayWindow():
                                   bg = bkgndColor,
                                   height = 2,
                                   width = 20)
-    #PlaylistNameDirection.place(relx = 0, rely =0.1)
     PlaylistNameDirection.pack(side = LEFT)
     
     ## Creating Checker
-    # Need to create a function that checks if a specified playlist exists
     SearchButtonFrame = Frame(adPlayWindow, highlightbackground = mainColor, highlightthickness= 5, bg = mainColor, bd= 0)
     SearchButtonFrame.place(relx = 0, rely = 0.30)
     SearchButton = Button(SearchButtonFrame, 
@@ -287,20 +282,16 @@ def openEditPlayWindow():
     editPlayWindow.title("Edit Playlists")
     editPlayWindow.geometry("500x350")
     
-    
-    
     db = connect_to_database()
     cursor = db.cursor()
         
     query1 = f"SELECT playlistTitle FROM Playlists"
     cursor.execute(query1)
     result1 = cursor.fetchall()
-    #print(result1)
-    
+        
     query2 = f"SELECT songTitle FROM Songs"
     cursor.execute(query2)
     result2 = cursor.fetchall()
-    #print(result2)
     
     # List to have all playlists
     playlistDisplayFrame = Frame(editPlayWindow, highlightbackground= mainColor, highlightthickness= 5, bg = mainColor, bd = 0)
@@ -319,9 +310,7 @@ def openEditPlayWindow():
         playlistDisplay.insert(END, f"{playlistName}")
     playlistDisplay.pack(side = LEFT, anchor= 'nw', padx=10)
     
-    
     # List to have all songs
-    ## NEEDS TO BE A CHECKBOX
     songDisplay = Listbox(playlistDisplayFrame,
                           exportselection= False,
                           selectmode = "multiple",
@@ -340,7 +329,6 @@ def openEditPlayWindow():
     def selectAll():
         db = connect_to_database()
         cursor = db.cursor()
-        print("Select Playlist")
         
         selected = playlistDisplay.curselection()
         val = playlistDisplay.get(selected)
@@ -350,8 +338,6 @@ def openEditPlayWindow():
         
         for playlist in result1:
             playlistName = playlist[0]
-        print(playlistName)  
-        print("Select Songs")
         
         selected = songDisplay.curselection()
         selectedItems = []
@@ -367,26 +353,20 @@ def openEditPlayWindow():
             query5 = f"INSERT INTO PlaylistSongs (playlistID, songID) Values ({playlistName}, {processedIDs})"
             cursor.execute(query5)
             
-            #result2 = cursor.fetchone()
-        print(result2)   
-        print("After")
         db.commit()
         cursor.close()
-        print(selectedItems)
-        print(selectedIds)      
-      
-    
+              
     songDisplayFrame = Frame(editPlayWindow, highlightbackground= mainColor, highlightthickness= 5, bg = mainColor, bd = 0)
     songDisplayFrame.place(relx= 0.05, rely = 0.75)
  
     # Want to be able to select a playlist, then select multiple songs to add.
     selectCurrentPlaylistButton = Button(songDisplayFrame,
-                                         text = "Select Playlist",
+                                         text = "Confirm Change",
                                          font = 'Arial 15',
                                          fg = acctColor,
                                          bg = bkgndColor,
                                          highlightcolor= mainColor,
-                                         width = 12,
+                                         width = 15,
                                          height = 2,
                                          command = selectAll)
     selectCurrentPlaylistButton.pack(side = LEFT)
