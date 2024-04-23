@@ -72,6 +72,8 @@ searchAlbum = StringVar()
 searchSong = StringVar()
 searchRelease = StringVar()
 enterLabel = StringVar()
+enterGenre = StringVar()
+enterYear = IntVar()
 
 ##### Setting Labels for each frame #####
 ## Start Page ##
@@ -819,6 +821,8 @@ def openAlbumEditWin():
     db = connect_to_database()
     cursor = db.cursor()
     
+    
+ 
     # Textbox to Search
     searchAlbumBorder = Frame(albumEditWindow, highlightbackground = mainColor, highlightcolor=mainColor, bg = mainColor, highlightthickness = 5, bd = 0)
     searchAlbumBorder.place(relx = 0, rely = 0)
@@ -851,8 +855,62 @@ def openAlbumEditWin():
         artistName = artists[0]
         labelName = artists[1]
         artistDisplay.insert(END, f"{artistName}, Label: {labelName}")
-    #artistDisplay.pack(side = BOTTOM, anchor = 'sw')
-    artistDisplay.grid(row = 1, column=0)
+    artistDisplay.grid(row = 5, column=0)
+    
+    #Labels for if album is available
+    albumLabel = Label(searchAlbumBorder,
+                        text = "Results Here",
+                        font = 'Arial 15', 
+                        fg = acctColor,
+                        bg = bkgndColor,
+                        height = 2, 
+                        width = 27)
+    albumLabel.grid(row = 1, column = 0, sticky = 'e')
+    
+    resultLabel = Button(searchAlbumBorder,
+                        text = "Artist Information:",
+                        font = 'Arial 15',
+                        fg = acctColor,
+                        bg = bkgndColor,
+                        height = 2,
+                        width = 15)
+    resultLabel.grid(row = 1, column = 0, sticky = 'w')
+    
+    ## Input for genre
+    enterGenreButton = Button(searchAlbumBorder, 
+                     text = "Genre",
+                     font = "Arial 15",
+                     fg = acctColor,
+                     bg = bkgndColor,
+                     width= 15,
+                     height = 2)
+    enterGenreButton.grid(row = 2, column = 0, sticky = 'w')
+
+    genreEntry = Entry(searchAlbumBorder,
+                    textvariable= enterGenre,
+                    font = "Arial 20",
+                    fg = acctColor,
+                    bg = bkgndColor) 
+    genreEntry.grid(row = 2, column = 0, sticky = 'e')
+    
+    ## Input for year
+    enterYearButton = Button(searchAlbumBorder, 
+                     text = "Year",
+                     font = "Arial 15",
+                     fg = acctColor,
+                     bg = bkgndColor,
+                     width= 15,
+                     height = 2)
+    enterYearButton.grid(row = 3, column = 0, sticky = 'w')
+
+    yearEntry = Entry(searchAlbumBorder,
+                    textvariable= enterYear,
+                    font = "Arial 20",
+                    fg = acctColor,
+                    bg = bkgndColor) 
+    yearEntry.grid(row = 3, column = 0, sticky = 'e')
+    
+    
     # Check input
     
     
@@ -864,7 +922,7 @@ def openAlbumEditWin():
     
     # Add info 
     
-    
+    cursor.close()
     
     
     
