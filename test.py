@@ -67,9 +67,10 @@ playlistPage.configure(bg=bkgndColor)
 searchTextPlay = StringVar()
 searchTextSong = StringVar()
 enterPlaylistName = StringVar()
-global playlistHolder
-
-
+searchArtist = StringVar()
+searchAlbum = StringVar()
+searchSong = StringVar()
+searchRelease = StringVar()
 
 ##### Setting Labels for each frame #####
 ## Start Page ##
@@ -657,7 +658,24 @@ def openArtistEditWin():
     artistEditWindow.title("Add / Delete Artists")
     artistEditWindow.geometry("500x500")
 
-    # Textbox to Search
+    # Textbox and button to Search
+    searchArtistBorder = Frame(artistEditWindow, highlightbackground = mainColor, highlightcolor=mainColor, bg = mainColor, highlightthickness = 5, bd = 0)
+    searchArtistBorder.place(relx = 0, rely = 0)
+    searchArtistButton = Button(searchArtistBorder, 
+                     text = "Search Albums:",
+                     font = "Arial 15",
+                     fg = acctColor,
+                     bg = bkgndColor,
+                     width= 15,
+                     height = 2)
+    searchArtistButton.pack(side = LEFT)
+
+    searchArtistEntry = Entry(searchArtistBorder,
+                    textvariable= searchArtist,
+                    font = "Arial 20",
+                    fg = acctColor,
+                    bg = bkgndColor)
+    searchArtistEntry.pack(side = RIGHT)
     # Delete if Exists
     # Add Info
 
@@ -680,7 +698,25 @@ def openAlbumEditWin():
     albumEditWindow.configure(bg = mainColor)
     albumEditWindow.title("Add / Delete Albums")
     albumEditWindow.geometry("500x500")
+    
     # Textbox to Search
+    searchAlbumBorder = Frame(albumEditWindow, highlightbackground = mainColor, highlightcolor=mainColor, bg = mainColor, highlightthickness = 5, bd = 0)
+    searchAlbumBorder.place(relx = 0, rely = 0)
+    searchAlbumButton = Button(searchAlbumBorder, 
+                     text = "Search Artists:",
+                     font = "Arial 15",
+                     fg = acctColor,
+                     bg = bkgndColor,
+                     width= 15,
+                     height = 2)
+    searchAlbumButton.pack(side = LEFT)
+
+    searchAlbumEntry = Entry(searchAlbumBorder,
+                    textvariable= searchAlbum,
+                    font = "Arial 20",
+                    fg = acctColor,
+                    bg = bkgndColor)
+    searchAlbumEntry.pack(side = RIGHT)
     # Delete if Exists
     # Search Artist
     # Add info 
@@ -704,7 +740,25 @@ def openSongEditWin():
     songEditWindow.configure(bg = mainColor)
     songEditWindow.title("Add / Delete Songs")
     songEditWindow.geometry("500x500")
+    
     # Textbox to Search
+    searchSongBorder = Frame(songEditWindow, highlightbackground = mainColor, highlightcolor=mainColor, bg = mainColor, highlightthickness = 5, bd = 0)
+    searchSongBorder.place(relx = 0, rely = 0)
+    searchSongButton = Button(searchSongBorder, 
+                     text = "Search Songs:",
+                     font = "Arial 15",
+                     fg = acctColor,
+                     bg = bkgndColor,
+                     width= 15,
+                     height = 2)
+    searchSongButton.pack(side = LEFT)
+
+    searchSongEntry = Entry(searchSongBorder,
+                    textvariable= searchSong,
+                    font = "Arial 20",
+                    fg = acctColor,
+                    bg = bkgndColor)
+    searchSongEntry.pack(side = RIGHT)
     # Delete If Exists
     # Search Album
     # Add info
@@ -726,7 +780,7 @@ editSongButton.grid(row = 5, column= 1, sticky= 'w')
 def openReleaseEditWin():
     releaseEditWindow = Toplevel(root)
     releaseEditWindow.configure(bg = mainColor)
-    releaseEditWindow.title("Add / Delete RFeleases")
+    releaseEditWindow.title("Add / Delete Releases")
     releaseEditWindow.geometry("500x500")
     # Textbox to Search
     # Delete If Exists
