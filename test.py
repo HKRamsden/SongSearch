@@ -307,6 +307,7 @@ def openEditPlayWindow():
     playlistDisplayFrame.place(relx = 0, rely = 0)
     ## NEEDS TO BE A RADIOBOX
     playlistDisplay = Listbox(playlistDisplayFrame,
+                          exportselection= False,
                           font = "Arial 15",
                           fg = acctColor,
                           bg = bkgndColor,
@@ -322,6 +323,7 @@ def openEditPlayWindow():
     # List to have all songs
     ## NEEDS TO BE A CHECKBOX
     songDisplay = Listbox(playlistDisplayFrame,
+                          exportselection= False,
                           selectmode = "multiple",
                           font = "Arial 15",
                           fg = acctColor,
@@ -335,40 +337,48 @@ def openEditPlayWindow():
     songDisplay.pack(side = RIGHT, anchor = 'ne')
     
     ## Select Playlist Function
-    def selectPlaylist():
+    def selectAll():
         db = connect_to_database()
         cursor = db.cursor()
         print("Select Playlist")
+        
         selected = playlistDisplay.curselection()
         val = playlistDisplay.get(selected)
-        query1 = f"SELECT playlistID FROM Playlists WHERE playlistTitle = \"{val}\""
-        cursor.execute(query1)
-        result = cursor.fetchall()
-        cursor.close()
-        for playlist in result:
-            playlistName = playlist[0]
-        print(playlistName)
-        return playlistName     
+        query3 = f"SELECT playlistID FROM Playlists WHERE playlistTitle = \"{val}\""
+        cursor.execute(query3)
+        result1 = cursor.fetchall()
         
-    ## Select Song Function
-    def selectSong():
+        for playlist in result1:
+            playlistName = playlist[0]
+        print(playlistName)  
         print("Select Songs")
+        
         selected = songDisplay.curselection()
         selectedItems = []
+        selectedIds = []
+        
         for index in selected:
             selectedItems.append(songDisplay.get(index))
+            query4 = f"SELECT songID FROM Songs WHERE songTitle = \"{songDisplay.get(index)}\""
+            cursor.execute(query4)
+            result2 = cursor.fetchone()
+            processedIDs = result2[0]
+            selectedIds.append(processedIDs)
+            query5 = f"INSERT INTO PlaylistSongs (playlistID, songID) Values ({playlistName}, {processedIDs})"
+            cursor.execute(query5)
+            
+            #result2 = cursor.fetchone()
+        print(result2)   
+        print("After")
+        db.commit()
+        cursor.close()
         print(selectedItems)
-        return selectedItems
-        
-        
-    ## Confirm Choices Function
-    def confirmSong(playlistHolder, selectedItems):
-        print("Confirm Song")
-        
+        print(selectedIds)      
+      
     
     songDisplayFrame = Frame(editPlayWindow, highlightbackground= mainColor, highlightthickness= 5, bg = mainColor, bd = 0)
     songDisplayFrame.place(relx= 0.05, rely = 0.75)
-    
+ 
     # Want to be able to select a playlist, then select multiple songs to add.
     selectCurrentPlaylistButton = Button(songDisplayFrame,
                                          text = "Select Playlist",
@@ -378,31 +388,10 @@ def openEditPlayWindow():
                                          highlightcolor= mainColor,
                                          width = 12,
                                          height = 2,
-                                         command = selectPlaylist)
+                                         command = selectAll)
     selectCurrentPlaylistButton.pack(side = LEFT)
     
-    #selectCurrentPlaylistButton.pack(side = BOTTOM, anchor= 'sw', padx= 10, pady = 10)
-    selectSongButton = Button(songDisplayFrame, 
-                              text = "Select Song(s)",
-                              font = 'Arial 15',
-                              fg = acctColor,
-                              bg = bkgndColor,
-                              highlightcolor= mainColor,
-                              width = 12, 
-                              height = 2,
-                              command = selectSong)
-    selectSongButton.pack(side = RIGHT)
-    confirmButton = Button(songDisplayFrame, 
-                              text = "Confirm Selection",
-                              font = 'Arial 15',
-                              fg = acctColor,
-                              bg = bkgndColor,
-                              highlightcolor= mainColor,
-                              width = 14, 
-                              height = 2,
-                              command = confirmSong)
-    confirmButton.pack(side = LEFT)  
-    
+
 ### Add / Delete Playlist ###
 adPlayButtonBorder = Frame(playlistPage, highlightbackground = mainColor, highlightthickness = 5, bd = 0)
 adPlayButtonBorder.place(relx = 0.2, rely = 0)
@@ -607,3 +596,6 @@ root.mainloop()
 
 #12 Tutorials Point - Best Way to Test if a Row Exists in a MySQL Table
 # https://www.tutorialspoint.com/best-way-to-test-if-a-row-exists-in-a-mysql-table#:~:text=To%20test%20whether%20a%20row,false%20is%20represented%20as%200.
+
+#13 Medium - Python Tkinter Multi-Select Listboxes
+# https://medium.com/@rushi.hacktivity/python-tinker-multiselect-listbox-e007ecd313d4
