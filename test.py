@@ -520,11 +520,132 @@ searchSongEntry = Entry(searchSongBorder,
 searchSongEntry.pack(side = RIGHT)
 
 ### Song Management Page ###
+# Connect to database
+db = connect_to_database()
+cursor = db.cursor()
+
+# Query for getting all artists
+artistQuery = f"SELECT artistTitle, label FROM Artists"
+cursor.execute(artistQuery)
+artistResult = cursor.fetchall()
+
+# Query for getting all albums
+albumQuery = f"SELECT albumTitle, artistTitle, genre, initialRelease FROM Albums"
+cursor.execute(albumQuery)
+albumResult = cursor.fetchall()
+
+# Query for getting all Songs
+songQuery = f"SELECT songTitle, albumTitle FROM Songs"
+cursor.execute(songQuery)
+songResult = cursor.fetchall()
+
+# Query for getting all Special Releases
+releaseQuery = f"SELECT albumTitle, altYear, remastered FROM Releases NATURAL JOIN albums"
+cursor.execute(releaseQuery)
+releaseResult = cursor.fetchall()
+
+# Frame to hold listboxes 
+listboxDisplayFrames = Frame(songPage, highlightbackground= mainColor, highlightthickness= 5, bg = mainColor, bd = 0)
+listboxDisplayFrames.place(relx = 0.005, rely = 0.07)
+
+# Label for Artsts
+artistLabel = Label(listboxDisplayFrames,
+                    text = "Artist Information",
+                    font = 'Arial 15',
+                    bg = bkgndColor,
+                    fg= acctColor,
+                    width= 44)
+#artistLabel.pack(side = TOP, anchor = 'nw')
+artistLabel.grid(row = 1, column= 0)
+
 ## Listbox to display artists and info
+artistDisplay = Listbox(listboxDisplayFrames,
+                        font = 'Arial 15',
+                        fg = acctColor,
+                        bg = bkgndColor,
+                        highlightcolor= mainColor,
+                        width = 44,
+                        height = 10)
+for artists in artistResult:
+    artistName = artists[0]
+    labelName = artists[1]
+    artistDisplay.insert(END, f"{artistName}, Label: {labelName}")
+#artistDisplay.pack(side = BOTTOM, anchor = 'sw')
+artistDisplay.grid(row = 2, column=0)
+
+# Label for Albums
+albumLabel = Label(listboxDisplayFrames,
+                   text = "Album Information",
+                   font = 'Arial 15',
+                   bg = bkgndColor,
+                   fg = acctColor,
+                   width= 44)
+#albumLabel.pack(side = TOP, anchor= 'ne')
+albumLabel.grid(row= 1, column=1)
 
 ## Listbox to display albums and info
+albumDisplay = Listbox(listboxDisplayFrames,
+                        font = 'Arial 15',
+                        fg = acctColor,
+                        bg = bkgndColor,
+                        highlightcolor= mainColor,
+                        width = 44,
+                        height = 10)
+for albums in albumResult:
+    albumName = albums[0]
+    artistName = albums[1]
+    genre = albums[2]
+    year = albums[3]
+    albumDisplay.insert(END, f"{albumName}: {artistName}, {genre}, {year}")
+#albumDisplay.pack(side = BOTTOM, anchor = 'se')
+albumDisplay.grid(row = 2, column = 1)
+
+# Label for Songs
+songsLabel = Label(listboxDisplayFrames,
+                   text = "Song Information",
+                   font = 'Arial 15',
+                   bg = bkgndColor,
+                   fg = acctColor,
+                   width= 44)
+songsLabel.grid(row=3, column = 0)
 
 ## Listbox to display songs and info
+songDisplay = Listbox(listboxDisplayFrames,
+                        font = 'Arial 15',
+                        fg = acctColor,
+                        bg = bkgndColor,
+                        highlightcolor= mainColor,
+                        width = 44,
+                        height = 10)
+for songs in songResult:
+    songName = songs[0]
+    albumName = songs[1]
+    songDisplay.insert(END, f"{songName}, {albumName}")
+songDisplay.grid(row = 4, column = 0)
+
+#Label for Releases
+releaseLabel = Label(listboxDisplayFrames,
+                   text = "Special Release Albums: Year, Remastered",
+                   font = 'Arial 15',
+                   bg = bkgndColor,
+                   fg = acctColor,
+                   width= 44)
+releaseLabel.grid(row=3, column = 1)
+
+## Listbox to Display Special Release info
+releaseDisplay = Listbox(listboxDisplayFrames,
+                        font = 'Arial 15',
+                        fg = acctColor,
+                        bg = bkgndColor,
+                        highlightcolor= mainColor,
+                        width = 44,
+                        height = 10)
+for versions in releaseResult:
+    albumName = versions[0]
+    year = versions[1]
+    remastered = versions[2]
+    releaseDisplay.insert(END, f"{albumName}: {year}, {remastered}")
+releaseDisplay.grid(row = 4, column = 1)
 
 ## Button to add/delete Artist
 # Pop Up window
