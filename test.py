@@ -180,7 +180,7 @@ def openAdPlayWindow():
             deleteButton.pack()
             addButton.pack_forget()
     
-    # Function to add playlists, need to complete
+    # Function to add playlists
     def addPlaylist():
         db = connect_to_database()
         cursor = db.cursor()
@@ -461,7 +461,9 @@ def songLookupDB():
     db = connect_to_database()
     cursor = db.cursor()
     val = searchTextSong.get()
-    query = f"SELECT songTitle FROM Songs NATURAL JOIN PlaylistSongs NATURAL JOIN Playlists WHERE songTitle LIKE \"%{val}%\" "
+    selected = playlistListBox.curselection()
+    val2 = playlistListBox.get(selected)
+    query = f"SELECT songTitle FROM Songs NATURAL JOIN PlaylistSongs NATURAL JOIN Playlists WHERE songTitle LIKE \"%{val}%\" AND playlistTitle = \"{val2}\" "
     cursor.execute(query)
     result = cursor.fetchall()
     cursor.close()
