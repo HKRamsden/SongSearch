@@ -1,16 +1,16 @@
-drop database if exists songSearch;
-create database if not exists songSearch;
+drop database if exists SongSearch;
+create database if not exists SongSearch;
 
-use songSearch;
+use SongSearch;
 
-
-    CREATE TABLE Songs (
+    CREATE TABLE songs (
       songID INT not null AUTO_INCREMENT,
       albumID INT,
       songTitle VARCHAR(50),
       albumTitle VARCHAR(50),
       length TIME,
-      PRIMARY KEY (songID)
+      PRIMARY KEY (songID),
+      FOREIGN KEY (albumID) REFERENCES Albums(albumID)
     );
    
     CREATE TABLE Albums (
@@ -20,7 +20,8 @@ use songSearch;
       artistTitle VARCHAR(50),
       genre VARCHAR(50),
       initialRelease YEAR,
-      PRIMARY KEY (albumID)
+      PRIMARY KEY (albumID),
+      FOREIGN KEY (artistID) REFERENCES Artists(artistID)
     );
     
     CREATE TABLE Artists (
@@ -35,7 +36,9 @@ use songSearch;
       artistID INT,
       altYear YEAR,
       remastered BOOL,
-      PRIMARY KEY (albumID, artistID)
+      PRIMARY KEY (albumID, artistID),
+      FOREIGN KEY (albumID) REFERENCES Albums(albumID),
+      FOREIGN KEY (artistID) REFERENCES Artists(artistID)
     );
     
     CREATE TABLE Playlists (
@@ -47,7 +50,9 @@ use songSearch;
     CREATE TABLE PlaylistSongs (
       playlistID INT,
       songID INT,
-      PRIMARY KEY (playlistID, songID)
+      PRIMARY KEY (playlistID, songID),
+      FOREIGN KEY (playlistID) REFERENCES Playlists(playlistID),
+      FOREIGN KEY (songID) REFERENCES Songs(songID)
     );
       
     INSERT INTO Songs(albumID, songTitle, albumTitle, length) values
@@ -80,10 +85,10 @@ use songSearch;
     (0003, 'All Cats Are Grey', 'Faith', '00:05:27'),
     (0003, 'The Funeral Party', 'Faith', '00:04:14'),
     (0003, 'Doubt', 'Faith', '00:03:11'),
-    (0003, 'The Drowning Man', '00:04:49'),
+    (0003, 'The Drowning Man','Faith', '00:04:49'),
     (0003, 'Faith', 'Faith', '00:06:43'),
     (0004, 'One Hundred Years', 'Pornography', '00:06:40'),
-    (0004, 'A Short Term Effect', 'Pornography', '00;04:22'),
+    (0004, 'A Short Term Effect', 'Pornography', '00:04:22'),
     (0004, 'The Hanging Garden', 'Pornography', '00:04:23'),
     (0004, 'Siamese Twins', 'Pornography', '00:05:29'),
     (0004, 'The Figurehead', 'Pornography', '00:05:15'),
@@ -148,9 +153,11 @@ use songSearch;
     (0009, 'Doing the Unstuck', 'Wish', '00:04:24'),
     (0009, 'Friday I''m in Love', 'Wish', '00:03:39'),
     (0009, 'Trust', 'Wish', '00:05:33'),
-    (0009, 'A Letter to Elise', 'Wish', '00:05:14');
+    (0009, 'A Letter to Elise', 'Wish', '00:05:14'),
+    (0010, 'Want', 'Wild Mood Swings', '00:05:06')
+   ;
     
-    INSERT INTO albums(artistID, albumTitle, artistTitle, genre, initialRelease) VALUES
+    INSERT INTO Albums (artistID, albumTitle, artistTitle, genre, initialRelease) VALUES
     (0001, 'Three Imaginary Boys', 'The Cure', 'Post-Punk', '1979'),
     (0001, 'Seventeen Seconds', 'The Cure', 'Gothic Rock', '1980'),
     (0001, 'Faith', 'The Cure', 'Gothic Rock', '1981'),
@@ -160,35 +167,35 @@ use songSearch;
     (0001, 'Kiss Me, Kiss Me, Kiss Me', 'The Cure', 'Alternative Rock', '1987'),
     (0001, 'Disentegration', 'The Cure', 'Gothic Rock', '1989'),
     (0001, 'Wish', 'The Cure', 'Alternative Rock', '1992'),
-    (0001, 'Show', 'The Cure', 'Alternative Rock', '1993'),
-    (0001, 'Paris', 'The Cure', 'Alternative Rock', '1993'),
     (0001, 'Wild Mood Swings', 'The Cure', 'Alternative Rock', '1996'),
     (0001, 'Galore', 'The Cure', 'Alternative Rock', '1997'),
     (0001, 'Bloodflowers', 'The Cure', 'Alternative Rock', '2000'),
     (0001, 'The Cure', 'The Cure', 'Alternative Rock', '1988'),
     (0001, '4:13 Dream', 'The Cure', 'Alternative Rock', '2008');
     
-    INSERT INTO Artists(artistTitle, label) VALUES
+    INSERT INTO Artists (artistTitle, label) VALUES
     ('The Cure', 'Fiction'),
     ('Twin Tribes', 'Twin Tribes'),
     ('London After Midnight', 'Metropolis Records'),
     ('Depeche Mode', 'Mute Records'),
     ('Sisters of Mercy', 'Merciful Release');
     
-    INSERT INTO Releases(albumID, artistID, altYear, remastered) VALUES 
-    (0016, 001, '2023', TRUE),
-    (0020, 001, '2004', FALSE);
+    INSERT INTO Releases(albumID, artistID, altYear, remastered) values 
+    (0010, 001, '2023', TRUE),
+    (0002, 001, '2004', FALSE);
     
-    INSERT INTO Playlists(playlistTitle) VALUES
+    INSERT INTO Playlists (playlistTitle) VALUES
     ('Playlist1'),
     ('Playlist2'), 
     ('Playlist3'),
     ('Playlist4'),
     ('Playlist5');
     
-    INSERT INTO PlaylistSongs(playlistID, songID) VALUES
+    INSERT INTO PlaylistSongs (playlistID, songID) VALUES
     (0001, 0003),
     (0001, 0004),
     (0001, 0012),
     (0001, 0023),
     (0001, 0008);
+   
+    
