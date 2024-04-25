@@ -821,7 +821,84 @@ def openAlbumEditWin():
     db = connect_to_database()
     cursor = db.cursor()
     
-    
+    # Check input
+    def albumExists():
+        db = connect_to_database()
+        cursor = db.cursor()
+        val = searchAlbum.get()
+        val2 = enterGenre.get()
+        val3 = enterYear.get()
+        query1 = f"SELECT EXISTS(SELECT albumTitle FROM Albums WHERE albumTitle = \"{val}\")"
+        cursor.execute(query1)
+        result = cursor.fetchall()
+        print(result)
+        cursor.close()
+        if result == [(0,)]:
+            print("test")
+            albumLabel.config(text = "Available")
+            deleteButton.grid_forget()
+            addButton.grid(row = 6, column = 0)
+            enterGenreButton.grid(row = 2, column = 0, sticky = 'w')
+            genreEntry.grid(row = 2, column = 0, sticky = 'e')
+            enterYearButton.grid(row = 3, column = 0, sticky = 'w')
+            yearEntry.grid(row = 3, column = 0, sticky= 'e')
+            artistDisplay.grid(row = 5, column = 0)
+
+        else:
+            print("alt Test")
+            albumLabel.config(text = "Exists")
+            deleteButton.grid(row = 6, column = 0)
+            addButton.grid_forget()
+            enterGenreButton.grid_forget()
+            genreEntry.grid_forget()
+            enterYearButton.grid_forget()
+            yearEntry.grid_forget()
+
+            
+    # Delete Function 
+    def deleteAlbum():
+        db = connect_to_database()
+        cursor = db.cursor()
+        val = searchAlbum.get()
+        query = f"DELETE FROM Albums WHERE albumTitle = \"{val}\""
+        cursor.execute(query)
+        artistDisplay.delete(0, END)
+        cursor.execute(albumQuery)
+        for albums in albumResult:
+            print("test")
+            albumName = albums[0]
+            artistName = albums[1]
+            genre = albums[2]
+            year = albums[3]
+            artistDisplay.insert(END, f"{albumName}: {artistName}, {genre}, {year}")
+            print(albumName)
+            print(artistName)
+        
+        db.commit()
+        cursor.close()
+        
+    # Add info     
+    def addAlbum():
+        db = connect_to_database()
+        cursor = db.cursor()
+        selected = artistDisplay.curselection()
+        print(selected)
+        query1 = f"SELECT artistTitle FROM Artists WHERE artistID = \"{selected}\""
+        cursor.execute(query1)
+        result = cursor.fetchall()
+
+        artistName = result
+        print(artistName)
+        
+        #val = artistDisplay.get(selected)
+        val2 = searchAlbum.get()
+        val3 = enterGenre.get()
+        val4 = enterYear.get()
+        query = f"INSERT INTO Albums (artistID, albumTitle, artistTitle, genre, initialRelease) VALUES ((SELECT artistID FROM Artists where artistTitle = \'{artistName}\'), \'{val2}\', \'{artistName}\', \'{val3}\', {val4})"
+        cursor.execute(query)
+        albumDisplay.insert(END, f"{val2}: {artistName}, {val2}, {val3}")
+        db.commit()
+        cursor.close()
  
     # Textbox to Search
     searchAlbumBorder = Frame(albumEditWindow, highlightbackground = mainColor, highlightcolor=mainColor, bg = mainColor, highlightthickness = 5, bd = 0)
@@ -832,7 +909,8 @@ def openAlbumEditWin():
                      fg = acctColor,
                      bg = bkgndColor,
                      width= 15,
-                     height = 2)
+                     height = 2,
+                     command= albumExists)
     searchAlbumButton.grid(row = 0, column = 0, sticky = 'w')
 
     searchAlbumEntry = Entry(searchAlbumBorder,
@@ -853,8 +931,8 @@ def openAlbumEditWin():
     cursor.execute(artistQuery)
     for artists in artistResult:
         artistName = artists[0]
-        labelName = artists[1]
-        artistDisplay.insert(END, f"{artistName}, Label: {labelName}")
+        #labelName = artists[1]
+        artistDisplay.insert(END, f"{artistName}")
     artistDisplay.grid(row = 5, column=0)
     
     #Labels for if album is available
@@ -868,7 +946,7 @@ def openAlbumEditWin():
     albumLabel.grid(row = 1, column = 0, sticky = 'e')
     
     resultLabel = Button(searchAlbumBorder,
-                        text = "Artist Information:",
+                        text = "Album Information:",
                         font = 'Arial 15',
                         fg = acctColor,
                         bg = bkgndColor,
@@ -910,24 +988,28 @@ def openAlbumEditWin():
                     bg = bkgndColor) 
     yearEntry.grid(row = 3, column = 0, sticky = 'e')
     
+    # Add Album Button
+    addButton = Button(searchAlbumBorder,
+                       text = "Add Album",
+                       font = 'Arial 15',
+                       fg = acctColor,
+                       bg = bkgndColor,
+                       height = 2,
+                       width = 15, 
+                       command = addAlbum)
     
-    # Check input
-    
-    
-    # Delete if Exists
-    
-    
-    # Search Artist
-    
-    
-    # Add info 
+    # Delete Album Button
+    deleteButton = Button(searchAlbumBorder,
+                          text = "Delete Album",
+                          font = 'Arial 15',
+                          fg = acctColor,
+                          bg = bkgndColor,
+                          width = 15,
+                          height = 2,
+                          command = deleteAlbum)
     
     cursor.close()
     
-    
-    
-    
-
 # Button to add/delete album
 editAlbumButton = Button(listboxDisplayFrames,
                           text = "Edit Albums",
