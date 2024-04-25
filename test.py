@@ -186,7 +186,7 @@ def openAdPlayWindow():
         query1 = f"SELECT * FROM Playlists"
         cursor.execute(query1)
         result1 = cursor.fetchall()
-        print(result1)
+        #print(result1)
         
         val = enterPlaylistName.get()
         query = f"INSERT INTO Playlists (playlistTitle) VALUES (\'{val}\')"
@@ -196,7 +196,7 @@ def openAdPlayWindow():
         result2 = cursor.fetchall()
         db.commit()
         cursor.close()
-        print(result2)
+        #print(result2)
     
     # Function to delete playlists
     def deletePlaylist():
@@ -206,7 +206,7 @@ def openAdPlayWindow():
         query1 = f"SELECT * FROM Playlists"
         cursor.execute(query1)
         result1 = cursor.fetchall()
-        print(result1)
+        #print(result1)
         
         val = enterPlaylistName.get()
         query = f"DELETE FROM Playlists WHERE playlistTitle = \"{val}\""
@@ -214,7 +214,7 @@ def openAdPlayWindow():
         
         cursor.execute(query1)
         result2 = cursor.fetchall()
-        print(result2)
+        #print(result2)
         db.commit()
         cursor.close()
     
@@ -672,10 +672,10 @@ def openArtistEditWin():
         query1 = f"SELECT EXISTS(SELECT artistTitle FROM Artists WHERE artistTitle = \"{val}\")"
         cursor.execute(query1)
         result = cursor.fetchall()
-        print(result)
+        #print(result)
         cursor.close()
         if result == [(0,)]:
-            print("test")
+            #print("test")
             artistLabel.config(text = "Available")
             deleteButton.grid_forget()
             addButton.grid(row = 3, column = 0)
@@ -683,7 +683,7 @@ def openArtistEditWin():
             labelButton.grid(row = 1, column = 0)
         
         else:
-            print("alt Test")
+            #print("alt Test")
             artistLabel.config(text = "Exists")
             addButton.grid_forget()
             labelEntry.grid_forget()
@@ -700,12 +700,12 @@ def openArtistEditWin():
         artistDisplay.delete(0, END)
         cursor.execute(artistQuery)
         for artists in artistResult:
-            print("test")
+            #print("test")
             artistName = artists[0]
             artistLabel = artists[1]
             artistDisplay.insert(END, f"{artistName}, Label: {artistLabel}")
-            print(artistName)
-            print(artistLabel)
+            #print(artistName)
+            #print(artistLabel)
         
         db.commit()
         cursor.close()
@@ -834,7 +834,7 @@ def openAlbumEditWin():
         print(result)
         cursor.close()
         if result == [(0,)]:
-            print("test")
+            #print("test")
             albumLabel.config(text = "Available")
             deleteButton.grid_forget()
             addButton.grid(row = 6, column = 0)
@@ -845,7 +845,7 @@ def openAlbumEditWin():
             artistDisplay.grid(row = 5, column = 0)
 
         else:
-            print("alt Test")
+            #print("alt Test")
             albumLabel.config(text = "Exists")
             deleteButton.grid(row = 6, column = 0)
             addButton.grid_forget()
@@ -862,17 +862,17 @@ def openAlbumEditWin():
         val = searchAlbum.get()
         query = f"DELETE FROM Albums WHERE albumTitle = \"{val}\""
         cursor.execute(query)
-        artistDisplay.delete(0, END)
+        albumDisplay.delete(0, END)
         cursor.execute(albumQuery)
         for albums in albumResult:
-            print("test")
+            #print("test")
             albumName = albums[0]
             artistName = albums[1]
             genre = albums[2]
             year = albums[3]
-            artistDisplay.insert(END, f"{albumName}: {artistName}, {genre}, {year}")
-            print(albumName)
-            print(artistName)
+            albumDisplay.insert(END, f"{albumName}: {artistName}, {genre}, {year}")
+            #print(albumName)
+            #print(artistName)
         
         db.commit()
         cursor.close()
@@ -890,13 +890,14 @@ def openAlbumEditWin():
         artistName = result
         print(artistName)
         
-        #val = artistDisplay.get(selected)
+        val = artistDisplay.get(selected)
+        print(val)
         val2 = searchAlbum.get()
         val3 = enterGenre.get()
         val4 = enterYear.get()
-        query = f"INSERT INTO Albums (artistID, albumTitle, artistTitle, genre, initialRelease) VALUES ((SELECT artistID FROM Artists where artistTitle = \'{artistName}\'), \'{val2}\', \'{artistName}\', \'{val3}\', {val4})"
+        query = f"INSERT INTO Albums (artistID, albumTitle, artistTitle, genre, initialRelease) VALUES ((SELECT artistID FROM Artists where artistTitle = \'{val}\'), \'{val2}\', \'{val}\', \'{val3}\', {val4})"
         cursor.execute(query)
-        albumDisplay.insert(END, f"{val2}: {artistName}, {val2}, {val3}")
+        albumDisplay.insert(END, f"{val2}: {val}, {val3}, {val4}")
         db.commit()
         cursor.close()
  
