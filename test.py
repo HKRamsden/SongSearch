@@ -74,7 +74,7 @@ searchRelease = StringVar()
 enterLabel = StringVar()
 enterGenre = StringVar()
 enterYear = IntVar()
-enterTime = StringVar()
+enterLength = StringVar()
 
 ##### Setting Labels for each frame #####
 ## Start Page ##
@@ -542,9 +542,11 @@ albumResult = cursor.fetchall()
 albumTitleQuery = f"SELECT albumTitle FROM Albums"
 
 # Query for getting all Songs
-songQuery = f"SELECT songTitle, albumTitle FROM Songs"
+songQuery = f"SELECT songTitle, albumTitle, length FROM Songs"
 cursor.execute(songQuery)
 songResult = cursor.fetchall()
+
+songTitleQuery = f"SELECT songTitle FROM Songs"
 
 # Query for getting all Special Releases
 releaseQuery = f"SELECT albumTitle, altYear, remastered FROM Releases NATURAL JOIN albums"
@@ -629,7 +631,8 @@ songDisplay = Listbox(listboxDisplayFrames,
 for songs in songResult:
     songName = songs[0]
     albumName = songs[1]
-    songDisplay.insert(END, f"{songName}, {albumName}")
+    length = songs[2]
+    songDisplay.insert(END, f"{songName}: {albumName}, {length}")
 songDisplay.grid(row = 4, column = 0)
 
 #Label for Releases
@@ -829,8 +832,6 @@ def openAlbumEditWin():
         db = connect_to_database()
         cursor = db.cursor()
         val = searchAlbum.get()
-        val2 = enterGenre.get()
-        val3 = enterYear.get()
         query1 = f"SELECT EXISTS(SELECT albumTitle FROM Albums WHERE albumTitle = \"{val}\")"
         cursor.execute(query1)
         result = cursor.fetchall()
@@ -1043,11 +1044,69 @@ def openSongEditWin():
     db = connect_to_database()
     cursor = db.cursor()
     
-    
+    # Check Input
+    def songExists():
+        db = connect_to_database()
+        cursor = db.cursor()
+        val = searchSong.get()
+        query = f"SELECT EXISTS(SELECT songTitle FROM Songs WHERE songTitle = \"{val}\")"
+        cursor.execute(query)
+        result = cursor.fetchall()
+        print(result)
+        if result == [(0,)]:
+            songLabel.config(text = "Available")
+            deleteButton.grid_forget()
+            addButton.grid(row = 4, column = 0)
+            enterTimeButton.grid(row = 2, column = 0, sticky = 'w')
+            enterTime.grid(row = 2, column = 0, sticky = 'e')
+        else:
+            songLabel.config(text = "Exists")
+            addButton.grid_forget()
+            deleteButton.grid(row = 4, column = 0)
+            enterTimeButton.grid_forget()
+            enterTime.grid_forget()
+            
+      
     # Delete If Exists
-    # Search Album
+    def deleteSong():
+        db = connect_to_database()
+        cursor = db.cursor()
+        val = searchSong.get()
+        query = f"DELETE FROM Songs WHERE songTitle = \"{val}\""
+        cursor.execute(query)
+        songDisplay.delete(0, END)
+        cursor.execute(songQuery)
+        db.commit()
+
+        for songs in songResult:
+            songName = songs[0]
+            albumName = songs[1]
+            length = songs[2]
+            songDisplay.insert(END, f"{songName}: {albumName}, {length}")
+        cursor.close() 
     # Add info
-    
+    def addSong():
+        db = connect_to_database()
+        cursor = db.cursor()
+        selected = albumDisplay.curselection()
+        print(selected)
+        query1 = f"SELECT albumTitle FROM Albums WHERE albumID = \"{selected}\""
+        cursor.execute(query1)
+        result = cursor.fetchall()
+        
+        songName = result
+        print(songName)
+        
+        val = albumDisplay.get(selected)
+        val2 = searchSong.get()
+        val3 = enterLength.get()
+        query = f"INSERT INTO Songs (albumID, songTitle, albumTitle, length) VALUES ((SELECT albumID FROM Albums WHERE albumTitle = \'{val}\'), \'{val2}\', \'{val}\', \'{val3}\')"
+        cursor.execute(query)
+        songDisplay.insert(END, f"{val2}: {val}, {val3}")
+        db.commit()
+        cursor.close()
+        
+   ## Search and Enter Song Information  
     
     # Textbox to Search
     searchSongBorder = Frame(songEditWindow, highlightbackground = mainColor, highlightcolor=mainColor, bg = mainColor, highlightthickness = 5, bd = 0)
@@ -1058,7 +1117,8 @@ def openSongEditWin():
                      fg = acctColor,
                      bg = bkgndColor,
                      width= 15,
-                     height = 2)
+                     height = 2,
+                     command = songExists)
     searchSongButton.grid(row = 0, column = 0, sticky = 'w')
 
     searchSongEntry = Entry(searchSongBorder,
@@ -1092,18 +1152,20 @@ def openSongEditWin():
                              text = "Enter Length:",
                              font = 'Arial 15',
                              fg = acctColor,
-                             bg = bkgndColor,)
+                             bg = bkgndColor,
+                             height = 2,
+                             width = 15)
     enterTimeButton.grid(row = 2, column= 0, sticky= 'w')
     
     enterTime = Entry(searchSongBorder,
-                      textvariable= searchSong,
+                      textvariable= enterLength,
                       font = 'Arial 20',
                       fg = acctColor,
                       bg = bkgndColor)
     enterTime.grid(row = 2, column = 0, sticky = 'e')
     
     # Listbox to display all albums
-    songDisplay = Listbox(searchSongBorder,
+    albumDisplay = Listbox(searchSongBorder,
                           font = 'Arial 15',
                           fg = acctColor,
                           bg = bkgndColor,
@@ -1114,10 +1176,28 @@ def openSongEditWin():
     albumResult = cursor.fetchall()
     for titles in albumResult:
         albumName = titles[0]
-        songDisplay.insert(END, f"{albumName}")
-    songDisplay.grid(row = 3, column = 0)
+        albumDisplay.insert(END, f"{albumName}")
+    albumDisplay.grid(row = 3, column = 0)
     
-
+    deleteButton = Button(searchSongBorder,
+                          text = "Delete Song", 
+                          font = 'Arial 15',
+                          fg = acctColor,
+                          bg = bkgndColor,
+                          height = 2, 
+                          width = 15,
+                          command = deleteSong)
+    
+    addButton = Button(searchSongBorder,
+                       text = "Add Song",
+                       font = 'Arial 15',
+                       fg = acctColor,
+                       bg = bkgndColor,
+                       height = 2, 
+                       width = 15, 
+                       command = addSong)
+    db.close()
+    
 # Button to add delete song
 editSongButton = Button(listboxDisplayFrames,
                           text = "Edit Songs",
