@@ -74,6 +74,7 @@ searchRelease = StringVar()
 enterLabel = StringVar()
 enterGenre = StringVar()
 enterYear = IntVar()
+enterTime = StringVar()
 
 ##### Setting Labels for each frame #####
 ## Start Page ##
@@ -537,6 +538,8 @@ artistResult = cursor.fetchall()
 albumQuery = f"SELECT albumTitle, artistTitle, genre, initialRelease FROM Albums"
 cursor.execute(albumQuery)
 albumResult = cursor.fetchall()
+
+albumTitleQuery = f"SELECT albumTitle FROM Albums"
 
 # Query for getting all Songs
 songQuery = f"SELECT songTitle, albumTitle FROM Songs"
@@ -1037,6 +1040,8 @@ def openSongEditWin():
     songEditWindow.title("Add / Delete Songs")
     songEditWindow.geometry("500x500")
     
+    db = connect_to_database()
+    cursor = db.cursor()
     
     
     # Delete If Exists
@@ -1054,14 +1059,64 @@ def openSongEditWin():
                      bg = bkgndColor,
                      width= 15,
                      height = 2)
-    searchSongButton.pack(side = LEFT)
+    searchSongButton.grid(row = 0, column = 0, sticky = 'w')
 
     searchSongEntry = Entry(searchSongBorder,
                     textvariable= searchSong,
                     font = "Arial 20",
                     fg = acctColor,
                     bg = bkgndColor)
-    searchSongEntry.pack(side = RIGHT)
+    searchSongEntry.grid(row = 0, column = 0, sticky = 'e')
+        
+     #Labels for if song is available
+    songLabel = Label(searchSongBorder,
+                        text = "Results Here",
+                        font = 'Arial 15', 
+                        fg = acctColor,
+                        bg = bkgndColor,
+                        height = 2, 
+                        width = 27)
+    songLabel.grid(row = 1, column = 0, sticky = 'e')
+    
+    resultLabel = Button(searchSongBorder,
+                        text = "Song Information:",
+                        font = 'Arial 15',
+                        fg = acctColor,
+                        bg = bkgndColor,
+                        height = 2,
+                        width = 15)
+    resultLabel.grid(row = 1, column = 0, sticky = 'w')
+    
+    # Time entry for songs
+    enterTimeButton = Button(searchSongBorder,
+                             text = "Enter Length:",
+                             font = 'Arial 15',
+                             fg = acctColor,
+                             bg = bkgndColor,)
+    enterTimeButton.grid(row = 2, column= 0, sticky= 'w')
+    
+    enterTime = Entry(searchSongBorder,
+                      textvariable= searchSong,
+                      font = 'Arial 20',
+                      fg = acctColor,
+                      bg = bkgndColor)
+    enterTime.grid(row = 2, column = 0, sticky = 'e')
+    
+    # Listbox to display all albums
+    songDisplay = Listbox(searchSongBorder,
+                          font = 'Arial 15',
+                          fg = acctColor,
+                          bg = bkgndColor,
+                          highlightcolor= mainColor,
+                          width = 44, 
+                          height = 7)
+    cursor.execute(albumTitleQuery)
+    albumResult = cursor.fetchall()
+    for titles in albumResult:
+        albumName = titles[0]
+        songDisplay.insert(END, f"{albumName}")
+    songDisplay.grid(row = 3, column = 0)
+    
 
 # Button to add delete song
 editSongButton = Button(listboxDisplayFrames,
